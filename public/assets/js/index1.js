@@ -24,6 +24,8 @@ const hide = (elem) => {
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
+// The application should start with 5 default notes. This will add an ID of 6 to the next note.
+var i = 5; 
 
 const getNotes = () =>
   fetch('/api/notes', {
@@ -31,7 +33,8 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json',
     },
-  });
+  })
+
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -67,10 +70,13 @@ const renderActiveNote = () => {
 };
 
 const handleNoteSave = () => {
+  i ++;
   const newNote = {
+    id: i,
     title: noteTitle.value,
     text: noteText.value,
   };
+  console.log(newNote);
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -84,6 +90,8 @@ const handleNoteDelete = (e) => {
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+
+  console.log(noteId);
 
   if (activeNote.id === noteId) {
     activeNote = {};
@@ -103,7 +111,8 @@ const handleNoteView = (e) => {
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
-const handleNewNoteView = (e) => {
+const handleNewNoteView = (e, notesData) => {
+  
   activeNote = {};
   renderActiveNote();
 };
